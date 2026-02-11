@@ -20,8 +20,13 @@ export function initTable(settings, onAction) {
         root[el] = cloneTemplate(el);
         root.container.apppend(root[el].container);
     })
-    // @todo: #1.3 —  обработать события и вызвать onAction()
-
+    //обработать события и вызвать onAction()
+    root.container.addEventListener('change', () =>{onAction()});
+    root.container.addEventListener('reset', () => {setTimeout(onAction())});
+    root.container.addEventListener('submit', () => {
+        e.preventDefault();
+        onAction(e.submitter);
+    })
     // преобразовать данные в строки таблицы по шаблону
     const render = (data) => {
         const nextRows = data.map(item => { 
