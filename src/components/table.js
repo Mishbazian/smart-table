@@ -18,7 +18,7 @@ export function initTable(settings, onAction) {
     })
     after.forEach((el) => {
         root[el] = cloneTemplate(el);
-        root.container.apppend(root[el].container);
+        root.container.append(root[el].container);
     })
     //обработать события и вызвать onAction()
     root.container.addEventListener('change', () =>{onAction()});
