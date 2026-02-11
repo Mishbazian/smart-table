@@ -20,6 +20,7 @@ export function initTable(settings, onAction) {
         root[el] = cloneTemplate(el);
         root.container.append(root[el].container);
     })
+
     //обработать события и вызвать onAction()
     root.container.addEventListener('change', () =>{onAction()});
     root.container.addEventListener('reset', () => {setTimeout(onAction())});
