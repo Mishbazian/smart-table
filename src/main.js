@@ -4,14 +4,13 @@ import './style.css'
 import {data as sourceData} from "./data/dataset_1.js";
 
 import {initData} from "./data.js";
-import {processFormData} from "./lib/utils.js";
+import {processFormData, groupValueByName} from "./lib/utils.js";
 
 import {initTable} from "./components/table.js";
 // @todo: подключение
 import {initPagination} from "./components/pagination.js";
 import {initSorting} from "./components/sorting.js";
 import {initFiltering} from './components/filtering.js';
-
 
 // Исходные данные используемые в render()
 const {data, ...indexes} = initData(sourceData);
@@ -21,9 +20,12 @@ const {data, ...indexes} = initData(sourceData);
  * @returns {Object}
  */
 function collectState() {
+    
     const state = processFormData(new FormData(sampleTable.container));
     const rowsPerPage = parseInt(state.rowsPerPage);    // приведём количество страниц к числу
     const page = parseInt(state.page ?? 1);                // номер страницы по умолчанию 1 и тоже число
+    // сгруппируем интервал фильтрации Total в массив
+    groupValueByName(state, 'total', 'From', 'To')
 
     return {
         ...state,
@@ -77,9 +79,10 @@ const applySorting = initSorting([
 ]);
 
 // - фильтрация
-const applyFiltering = initFiltering(sampleTable.filter.elements, {  // передаём элементы фильтра
-    // для элемента с именем searchBySeller устанавливаем массив продавцов
-    searchBySeller: indexes.sellers 
+// передаём элементы фильтра
+// // для элемента с именем searchBySeller устанавливаем массив продавцов
+const applyFiltering = initFiltering(sampleTable.filter.elements, {
+    searchBySeller: indexes.sellers,
 });
 
 
