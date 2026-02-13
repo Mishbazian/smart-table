@@ -7,10 +7,11 @@ import {initData} from "./data.js";
 import {processFormData, groupValueByName} from "./lib/utils.js";
 
 import {initTable} from "./components/table.js";
-// @todo: подключение
+// подключение
 import {initPagination} from "./components/pagination.js";
 import {initSorting} from "./components/sorting.js";
 import {initFiltering} from './components/filtering.js';
+import { initSearching } from './components/searching.js';
 
 // Исходные данные используемые в render()
 const {data, ...indexes} = initData(sourceData);
@@ -41,12 +42,11 @@ function collectState() {
 function render(action) {
     let state = collectState(); // состояние полей из таблицы
     let result = [...data]; // копируем для последующего изменения
-    // @todo: использование
+    // использование
+    result = applySearching(result, state, action);
     result = applyFiltering(result, state, action);
     result = applySorting(result, state, action);
     result = applyPagination(result, state, action);
-
-
 
     sampleTable.render(result)
 }
@@ -54,11 +54,11 @@ function render(action) {
 const sampleTable = initTable({
     tableTemplate: 'table',
     rowTemplate: 'row',
-    before: ['header', 'filter'],
+    before: ['search', 'header', 'filter'],
     after: ['pagination']
 }, render);
 
-// @todo: инициализация
+// инициализация
 //- пагинация
 const applyPagination = initPagination(
     sampleTable.pagination.elements,             // передаём сюда элементы пагинации, найденные в шаблоне
@@ -80,12 +80,12 @@ const applySorting = initSorting([
 
 // - фильтрация
 // передаём элементы фильтра
-// // для элемента с именем searchBySeller устанавливаем массив продавцов
+// для элемента с именем searchBySeller устанавливаем массив продавцов
 const applyFiltering = initFiltering(sampleTable.filter.elements, {
     searchBySeller: indexes.sellers,
 });
-
-
+// - поиск
+const applySearching = initSearching('search');
 
 const appRoot = document.querySelector('#app');
 appRoot.appendChild(sampleTable.container);
