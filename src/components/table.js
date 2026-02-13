@@ -22,12 +22,25 @@ export function initTable(settings, onAction) {
     })
 
     //обработать события и вызвать onAction()
-    root.container.addEventListener('change', () =>{onAction()});
-    root.container.addEventListener('reset', () => {setTimeout(onAction())});
+    root.container.addEventListener('change', (e) =>{
+        onAction()});
+
+    root.container.addEventListener('reset', () => {
+        setTimeout(onAction())});
+
+
     root.container.addEventListener('submit', (e) => {
         e.preventDefault();
         onAction(e.submitter);
+    });
+    root.container.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            onAction();
+        }
     })
+
+
     // преобразовать данные в строки таблицы по шаблону
     const render = (data) => {
         const nextRows = data.map(item => { 
