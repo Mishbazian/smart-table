@@ -26,20 +26,14 @@ export function initTable(settings, onAction) {
         onAction()});
 
     root.container.addEventListener('reset', () => {
-        setTimeout(onAction())});
+        setTimeout(onAction())}
+    );
 
 
     root.container.addEventListener('submit', (e) => {
         e.preventDefault();
         onAction(e.submitter);
     });
-    root.container.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            onAction();
-        }
-    })
-
 
     // преобразовать данные в строки таблицы по шаблону
     const render = (data) => {
