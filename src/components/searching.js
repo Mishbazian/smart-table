@@ -1,20 +1,23 @@
-import { rules, createComparison } from "../lib/compare.js";
-
+/**
+ * Инициализация поиска
+ * @param {string} searchField - имя (name) DOM элемента, использующегося в качестве поля для поиска (должно быть ключом в state)
+ * @returns {function} - функция обновления query запроса
+ */
 export function initSearching(searchField) {
-    // настроить компаратор
-    const defRules = ["skipEmptyTargetValues"];
-    const cusRules = [
-        rules.searchMultipleFields(
-            searchField,
-            ["date", "customer", "seller"],
-            false,
-        ),
-    ];
-
-    const compare = createComparison(defRules, cusRules);
-
-    return (data, state, action) => {
-        //  применить компаратор
-        return data.filter((row) => compare(row, state));
+    /**
+     * Функция обновляет query-параметры для http-запроса при наличии значения в поле поиска
+     * @param {object} query - исходные query-параметры http-запроса
+     * @param {object} state - исходное состояние таблицы. должен содержать ключ, соответствующий searchField для работыы поиска
+     * @returns {object} - обновленный query (или исходный, если поиск не требуется)
+     */
+    const newQuery = (query, state) => {
+        return state[searchField]
+            ? Object.assign({}, query, {
+                  // проверяем, что в поле поиска было что-то введено
+                  search: state[searchField], // устанавливаем в query параметр
+              })
+            : query; // если поле с поиском пустое, просто возвращаем query без изменений
     };
+
+    return newQuery;
 }
