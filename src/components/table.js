@@ -1,4 +1,4 @@
-import {cloneTemplate} from "../lib/utils.js";
+import { cloneTemplate } from "../lib/utils.js";
 
 /**
  * Инициализирует таблицу и вызывает коллбэк при любых изменениях и нажатиях на кнопки
@@ -8,46 +8,48 @@ import {cloneTemplate} from "../lib/utils.js";
  * @returns {{container: Node, elements: *, render: render}}
  */
 export function initTable(settings, onAction) {
-    const {tableTemplate, rowTemplate, before, after} = settings;
+    const { tableTemplate, rowTemplate, before, after } = settings;
     const root = cloneTemplate(tableTemplate);
 
     //вывести дополнительные шаблоны до и после таблицы
-    before.reverse().forEach((el)=> {
+    before.reverse().forEach((el) => {
         root[el] = cloneTemplate(el);
         root.container.prepend(root[el].container);
-    })
+    });
     after.forEach((el) => {
         root[el] = cloneTemplate(el);
         root.container.append(root[el].container);
-    })
+    });
 
     //обработать события и вызвать onAction()
-    root.container.addEventListener('change', (e) =>{
-        onAction()});
+    root.container.addEventListener("change", (e) => {
+        onAction();
+    });
 
-    root.container.addEventListener('reset', (e) => {
-        setTimeout(onAction)}
-    );
+    root.container.addEventListener("reset", (e) => {
+        setTimeout(onAction);
+    });
 
-
-    root.container.addEventListener('submit', (e) => {
+    root.container.addEventListener("submit", (e) => {
         e.preventDefault();
-        onAction(e.submitter);
+        if (e.submitter.name !== "enter") {
+            onAction(e.submitter);
+        }
     });
 
     // преобразовать данные в строки таблицы по шаблону
     const render = (data) => {
-        const nextRows = data.map(item => { 
+        const nextRows = data.map((item) => {
             const row = cloneTemplate(rowTemplate);
-            Object.keys(item).forEach(key => {
+            Object.keys(item).forEach((key) => {
                 if (Object.keys(row.elements).includes(key)) {
-                   row.elements[key].textContent = item[key]
-                } 
-            })
-            return row.container
+                    row.elements[key].textContent = item[key];
+                }
+            });
+            return row.container;
         });
         root.elements.rows.replaceChildren(...nextRows);
-    }
+    };
 
-    return {...root, render};
+    return { ...root, render };
 }
