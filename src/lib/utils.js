@@ -119,31 +119,3 @@ export function getPages(currentPage, maxPage, limit) {
 
     return pages;
 }
-
-/**
- * функция группирует элементы объекта с однаковой первой частью ключа в элемент этого же объекта с массивом значений
- * @param {Object} obj - исходный объект
- * @param {string} prefix - часть исходного ключа, которая будет новым ключом
- * @param  {...string} suffixes - остатки ключей для итерации
- */
-export function groupValueByName(obj, prefix, ...suffixes) {
-    // Проверка входных параметров
-    if (!obj || typeof obj !== "object" || Array.isArray(obj)) {
-        throw new Error("Первый параметр должен быть объектом");
-    }
-    if (typeof prefix !== "string") {
-        throw new Error("Префикс ключа должен быть строкой");
-    }
-    if (suffixes.length === 0) {
-        throw new Error("Необходимо указать хотя бы один суффикс ключа");
-    }
-    const group = [];
-    for (let i = 0; i < prefix.length; i++) {
-        const key = prefix + suffixes[i];
-
-        if (key in obj) {
-            group.push(obj[key]);
-        }
-    }
-    obj[prefix] = group;
-}
