@@ -11,7 +11,6 @@ export function initFiltering(elements) {
      * Важно: для корректной работы ключ в elements должен быть идентичен ключу в indexes
      */
     const updateIndexes = (elements, indexes) => {
-        console.log(indexes);
         // Получаем ключи из объекта
         Object.keys(indexes).forEach((elementName) => {
             // Перебираем по именам
